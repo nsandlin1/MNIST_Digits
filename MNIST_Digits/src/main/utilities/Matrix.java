@@ -4,15 +4,13 @@ public class Matrix {
 	
 	/**
 	 * multiply method multiplies two matrices
-	 * @param
-	 * 		int[][] m1	| first matrix
-	 * 		int[][] m2	| second matrix
-	 * @return
-	 * 		int[][] 	| product of multiplication of m1 and m2
-	 * 				| null if zero matrix, int[][] otherwise	
-	 * @throws
-	 * 		Exception: Matrix multiplication undefined.		| if matrices are incompatible for matrix
-	 * 									| multiplication										
+	 * 
+	 * @param m1 | first matrix
+	 * @param m2 | second matrix
+	 * @return product of multiplication of m1 and m2
+	 * 				     null if zero matrix, int[][] otherwise	
+	 * @throws Exception Matrix multiplication undefined. | if matrices are incompatible for matrix
+	 * 													     multiplication										
 	*/		
 	public static double[][] multiply(double[][] m1, double[][] m2) throws Exception {
 		if (m1 == null || m1.length == 0 || m1[0].length == 0) {
@@ -47,6 +45,7 @@ public class Matrix {
 	
 	/**
 	 * dotProduct method returns dot product of two vectors
+	 * 
 	 * @param
 	 * 		double[] v1	| first vector
 	 * 		double[] v2	| second vector
@@ -70,6 +69,7 @@ public class Matrix {
 	
 	/**
 	 * add method adds two matrices
+	 * 
 	 * @param
 	 * 		double[][] m1	| first matrix
 	 * 		double[][] m2	| second matrix
@@ -95,6 +95,7 @@ public class Matrix {
 	
 	/**
 	 * add method adds two vectors
+	 * 
 	 * @param
 	 * 		double[] v1	| first vector
 	 * 		double[] v2	| second vector

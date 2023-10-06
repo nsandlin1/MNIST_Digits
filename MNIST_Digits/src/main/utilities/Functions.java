@@ -5,6 +5,7 @@ public class Functions {
 	
 	/**
 	 * sigmoid method applies sigmoid function 1 / (1 + e^(-x)) across vector
+	 * 
 	 * @param
 	 * 		double[] arr	| the vector
 	 * @return
@@ -20,6 +21,7 @@ public class Functions {
 	
 	/**
 	 * sigmoid method applies sigmoid function 1 / (1 + e^(-x))
+	 * 
 	 * @param
 	 * 		double val	| the value
 	 * @return
@@ -31,6 +33,7 @@ public class Functions {
 	
 	/**
 	 * sum method returns sum of members of vector
+	 * 
 	 * @param
 	 * 		double[] arr 	| the vector
 	 * @return
