@@ -21,7 +21,7 @@ public class Functions {
 	/**
 	 * sigmoid method applies sigmoid function 1 / (1 + e^(-x))
 	 * @param
-	 * 		double arr	| the value
+	 * 		double val	| the value
 	 * @return
 	 *		double 	| the value after sigmoid application
 	 */
