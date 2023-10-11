@@ -6,10 +6,8 @@ public class Functions {
 	/**
 	 * sigmoid method applies sigmoid function 1 / (1 + e^(-x)) across vector
 	 * 
-	 * @param
-	 * 		double[] arr	| the vector
-	 * @return
-	 *		double[] 	| the vector after sigmoid application
+	 * @param arr | the vector
+	 * @return the vector after sigmoid application
 	 */
 	public static double[] sigmoid(double[] arr) {
 		double[] newArr = new double[arr.length];

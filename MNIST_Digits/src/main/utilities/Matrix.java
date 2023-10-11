@@ -47,10 +47,10 @@ public class Matrix {
 	 * dotProduct method returns dot product of two vectors
 	 * 
 	 * @param
-	 * 		double[] v1	| first vector
-	 * 		double[] v2	| second vector
+	 * 		v1	| first vector
+	 * 		v2	| second vector
 	 * @return
-	 * 		double 	| product of dot product of v1 and v2	
+	 * 		product of dot product of v1 and v2	
 	 * @throws
 	 * 		Exception: Vector Dot Product undefined.		| if vectors are incompatible for vector
 	 * 									| multiplication										
@@ -71,10 +71,10 @@ public class Matrix {
 	 * add method adds two matrices
 	 * 
 	 * @param
-	 * 		double[][] m1	| first matrix
-	 * 		double[][] m2	| second matrix
+	 * 		m1	| first matrix
+	 * 		m2	| second matrix
 	 * @return
-	 * 		double[][] 	| sum of addition of m1 and m2	
+	 * 		sum of addition of m1 and m2	
 	 * @throws
 	 * 		Exception: Matrix addition undefined.		| if matrices are incompatible for matrix
 	 * 									| addition										
@@ -97,10 +97,10 @@ public class Matrix {
 	 * add method adds two vectors
 	 * 
 	 * @param
-	 * 		double[] v1	| first vector
-	 * 		double[] v2	| second vector
+	 * 		v1	| first vector
+	 * 		v2	| second vector
 	 * @return
-	 * 		double[] 	| sum of addition of v1 and v2	
+	 * 		sum of addition of v1 and v2	
 	 * @throws
 	 * 		Exception: Vector addition undefined.		| if vectors are incompatible for vector
 	 * 									| addition										
@@ -121,7 +121,7 @@ public class Matrix {
 	public static void print_matrix(double[][] m) {
 		for (int i = 0; i < m.length; i++) {
 			System.out.print("[ ");
-			for (int j = 0; j < m[0].length; j++) {
+			for (int j = 0; j < m[i].length; j++) {
 				System.out.print(m[i][j] + " ");
 			}
 			System.out.println("]");
