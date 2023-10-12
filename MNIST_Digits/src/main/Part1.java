@@ -66,7 +66,7 @@ public class Part1 {
 		// train the network
 		Network trainedNetwork = ANN.trainNetwork(untrainedNetwork, learningRate, batches, epochs, true);
 		
-		double[] output = ANN.compute(trainedNetwork, new double[] {0, 1, 0, 1});
+		double[] output = ANN.compute(trainedNetwork, new double[] {0, 1, 0, 1}, false);
 		Matrix.print_vector(output);
 	}
 }

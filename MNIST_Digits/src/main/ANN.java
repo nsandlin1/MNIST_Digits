@@ -11,6 +11,11 @@ public class ANN {
 		public double[][] bias_gradients;
 	}
 	
+	private static class Act {
+		public double a;
+		public double z;
+	}
+	
 	/**
 	 * perform feed forward for single neuron
 	 * 
@@ -20,16 +25,21 @@ public class ANN {
 	 * @return the activation of the neuron
 	 * @throws Exception
 	 */
-	private static double singleNeuronActivation(double[] input, double[] weights, double bias) {
+	private static Act singleNeuronActivation(double[] input, double[] weights, double bias) {
 		
 		try {
 			
-			// return the activation of the neuron
-			return Functions.sigmoid(Matrix.dotProduct(input, weights) + bias);
+			// define the activation of the neuron
+			Act A = new Act();
+			A.z = Matrix.dotProduct(input, weights) + bias;
+			A.a = Functions.sigmoid(A.z);
+			
+			// return the activation
+			return A;
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			return 0;
+			return null;
 		}
 	}
 	
@@ -39,19 +49,33 @@ public class ANN {
 	 * @param input | the output from the previous layer of nodes
 	 * @param weights | the weights of the neural layer
 	 * @param bias | the biases of the neural layer
+	 * @param diagnostics | whether you want verbose descriptions of the goings-on
 	 * @return the activations of a layer of neurons
 	 */
-	private static double[] singleLayerActivation(double[] input, double[][] weights, double[] biases) {
+	private static double[] singleLayerActivation(double[] input, double[][] weights, double[] biases, boolean diagnostics) {
 		
 		// activations vector holds the activations of the layer's nodes
 		double[] activations = new double[weights.length];
+		
+		// for diagnostics
+		double[] z_values = new double[weights.length];
 		
 		// iterate through each node in the layer
 		for (int i = 0; i < weights.length; i++) {
 			
 			// compute the activation of the i'th neuron and assign it to the 
 			// i'th index of the activations vector
-			activations[i] = singleNeuronActivation(input, weights[i], biases[i]);
+			Act A = singleNeuronActivation(input, weights[i], biases[i]);
+			activations[i] = A.a;
+			
+			if (diagnostics) {
+				z_values[i] = A.z;
+			}
+		}
+		
+		if (diagnostics) { 
+			System.out.print("z values (pre sigmoid): ");
+			Matrix.print_vector(z_values);
 		}
 		
 		// return activations vector
@@ -64,9 +88,10 @@ public class ANN {
 	 * @param weights | the weights of the neural network
 	 * @param biases | the biases of the neural network
 	 * @param input | the input to the network
+	 * @param diagnostics | whether you want verbose descriptions of the goings-on
 	 * @return the outputs, or activations of the NN given the input
 	 */
-	private static double[][] feedForward(double[][][] weights, double[][] biases, double[] input) {
+	private static double[][] feedForward(double[][][] weights, double[][] biases, double[] input, boolean diagnostics) {
 		
 		// outputs holds the activations of NN nodes
 		// the first index is defined as the outputs of the first layer--the
@@ -78,8 +103,19 @@ public class ANN {
 		// iterate through layers of the network
 		for (int current_layer = 0; current_layer < outputs.length-1; current_layer++) {
 			
+			if (diagnostics) {
+				System.out.format("Layer %d\n", current_layer+1);
+				System.out.format("Input to layer (a^%d): ", current_layer);
+				Matrix.print_vector(outputs[current_layer]);
+			}
+			
 			// compute the activations of the current_layer
-			outputs[current_layer+1] = singleLayerActivation(outputs[current_layer], weights[current_layer], biases[current_layer]);
+			outputs[current_layer+1] = singleLayerActivation(outputs[current_layer], weights[current_layer], biases[current_layer], diagnostics);
+			
+			if (diagnostics) {
+				System.out.format("Output of layer (a^%d): ", current_layer+1);
+				Matrix.print_vector(outputs[current_layer+1]);
+			}
 		}
 
 		// return the outputs, or activations, of the network
@@ -93,9 +129,10 @@ public class ANN {
 	 * @param biases | the biases of the neural network
 	 * @param activations | the activations of the network during the feed-forward phase
 	 * @param correct_results | the expected activations of the output layer
+	 * @param diagnostics | whether you want verbose descriptions of the goings-on
 	 * @return the gradients of the network derived from a single input
 	 */
-	private static Gradients backpropogate(double[][][] weights, double[][] biases, double[][] activations, double[] correct_results) {
+	private static Gradients backpropogate(double[][][] weights, double[][] biases, double[][] activations, double[] correct_results, boolean diagnostics) {
 		
 		// declare gradient object to store weight and bias gradients for training_item
 		Gradients G = new Gradients();
@@ -157,6 +194,16 @@ public class ANN {
 			}
 		}
 		
+		if (diagnostics) {
+			for (int i = 0; i < G.bias_gradients.length; i++) {
+				System.out.format("Layer %d\n", i+1);
+				System.out.print("Bias gradients: ");
+				Matrix.print_vector(G.bias_gradients[i]);
+				System.out.println("Weight gradients:");
+				Matrix.print_matrix(G.weight_gradients[i]);
+			}
+		}
+		
 		// return the gradient object
 		return G;
 	}
@@ -174,19 +221,37 @@ public class ANN {
 	public static Network trainNetwork(Network N, double learningRate, double[][][][] batches, int epochs, boolean diagnostics) {
 		
 		if (diagnostics) { 
+			System.out.println("/////////////////////////////////////////////////////////////////////////////////////////////////////////\n");
 			System.out.println("Beginning training...");
-			System.out.println("-------------------------------------");
 		}
 		
 		// iterate through epochs
 		for (int epoch = 0; epoch < epochs; epoch++) {
 			
 			if (diagnostics) { 
+				System.out.println("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 				System.out.format("Epoch %d\n", epoch+1);
+				System.out.println("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
 			}
 			
 			// iterate through mini-batches
 			for (int batch = 0; batch < batches.length; batch++) {
+				
+				if (diagnostics) {
+					System.out.println("\n=========================================================================================================");
+					System.out.format("Batch %d\n", batch);
+					System.out.println("=========================================================================================================\n");
+					System.out.println("Network weights:");
+					for (int i = 0; i < N.weights.length; i++) {
+						System.out.format("Level %d\n", i);
+						Matrix.print_matrix(N.weights[i]);
+					}
+					System.out.println("\nNetwork biases:");
+					for (int i = 0; i < N.biases.length; i++) {
+						System.out.format("Level %d\n", i);
+						Matrix.print_vector(N.biases[i]);
+					}
+				}
 				
 				// activations stores the activations of all nodes, including input nodes
 				double[][] activations = new double[batches[batch].length][];
@@ -199,17 +264,23 @@ public class ANN {
 				for (int training_item = 0; training_item < batches[batch].length; training_item++) {
 					
 					if (diagnostics) {
-						System.out.format("training_item: %d\n", training_item);
+						System.out.println("\n---------------------------------------------------------------------------------------------------------");
+						System.out.format("\ntraining_item: %d\n", training_item+1);
 						System.out.print("Input: ");
 						Matrix.print_vector(batches[batch][training_item][0]);
+						System.out.println("\nFeeding forward");
 					}
 					
 					// feed input through network and store in activations
-					activations = feedForward(N.weights, N.biases, batches[batch][training_item][0]);
+					activations = feedForward(N.weights, N.biases, batches[batch][training_item][0], diagnostics);
+					
+					if (diagnostics) {
+						System.out.println("\nBackpropogating");
+					}
 					
 					// back-propogate; this calculates the gradients (weight & bias) for all
 					// nodes on all levels
-					gradients[training_item] = backpropogate(N.weights, N.biases, activations, batches[batch][training_item][1]);
+					gradients[training_item] = backpropogate(N.weights, N.biases, activations, batches[batch][training_item][1], diagnostics);
 				}
 				
 				// sumGradient stores the sum of all gradient vectors in gradients array
@@ -290,12 +361,28 @@ public class ANN {
 						N.biases[i][j] = N.biases[i][j] - ((learningRate / batches[batch].length) * sumGradient.bias_gradients[i][j]);
 					}
 				}
+				
+				if (diagnostics && (batch == batches.length - 1)) {
+					System.out.println("\n---------------------------------------------------------------------------------------------------------\n");
+					System.out.println("Final network state:");
+					System.out.println("Network weights:");
+					for (int i = 0; i < N.weights.length; i++) {
+						System.out.format("Level %d\n", i);
+						Matrix.print_matrix(N.weights[i]);
+					}
+					System.out.println("\nNetwork biases:");
+					for (int i = 0; i < N.biases.length; i++) {
+						System.out.format("Level %d\n", i);
+						Matrix.print_vector(N.biases[i]);
+					}
+				}
 					
 			}
 		}
 		
 		if (diagnostics) { 
-			System.out.println("Training Done.");
+			System.out.println("\nTraining Done.\n");
+			System.out.println("/////////////////////////////////////////////////////////////////////////////////////////////////////////");
 		}
 		
 		// return the network
@@ -307,13 +394,14 @@ public class ANN {
 	 * 
 	 * @param N | Network object containing weights and biases
 	 * @param input | the input to the network
+	 * @param diagnostics | whether you want verbose descriptions of the goings-on
 	 * @return the output of the network
 	 */
-	public static double[] compute(Network N, double[] input) {
+	public static double[] compute(Network N, double[] input, boolean diagnostics) {
 		
 		// outputs represents the outputs from all layers after input is
 		// fed through the network
-		double[][] outputs = feedForward(N.weights, N.biases, input);
+		double[][] outputs = feedForward(N.weights, N.biases, input, diagnostics);
 		
 		// return the last index of output, which is the activations of 
 		// the last layer (the layer's "output")
