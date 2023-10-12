@@ -8,9 +8,7 @@ public class Matrix {
 	 * @param m1 | first matrix
 	 * @param m2 | second matrix
 	 * @return product of multiplication of m1 and m2
-	 * 				     null if zero matrix, int[][] otherwise	
-	 * @throws Exception Matrix multiplication undefined. | if matrices are incompatible for matrix
-	 * 													     multiplication										
+	 * @throws Exception Matrix multiplication undefined.									
 	*/		
 	public static double[][] multiply(double[][] m1, double[][] m2) throws Exception {
 		if (m1 == null || m1.length == 0 || m1[0].length == 0) {
@@ -46,14 +44,10 @@ public class Matrix {
 	/**
 	 * dotProduct method returns dot product of two vectors
 	 * 
-	 * @param
-	 * 		v1	| first vector
-	 * 		v2	| second vector
-	 * @return
-	 * 		product of dot product of v1 and v2	
-	 * @throws
-	 * 		Exception: Vector Dot Product undefined.		| if vectors are incompatible for vector
-	 * 									| multiplication										
+	 * @param v1 | first vector
+	 * @param v2 | second vector
+	 * @return dot product of v1 and v2	
+	 * @throws Exception Vector Dot Product undefined.										
 	*/	
 	public static double dotProduct(double[] m1, double[] m2) throws Exception {
 		if (m1.length != m2.length) {
@@ -70,14 +64,10 @@ public class Matrix {
 	/**
 	 * add method adds two matrices
 	 * 
-	 * @param
-	 * 		m1	| first matrix
-	 * 		m2	| second matrix
-	 * @return
-	 * 		sum of addition of m1 and m2	
-	 * @throws
-	 * 		Exception: Matrix addition undefined.		| if matrices are incompatible for matrix
-	 * 									| addition										
+	 * @param m1 | first matrix
+	 * @param m2 | second matrix
+	 * @return sum of m1 and m2	
+	 * @throws Exception Matrix addition undefined.									
 	*/	
 	public static double[][] add(double[][] m1, double[][] m2) throws Exception {
 		if (m1.length != m2.length || m1[0].length != m2[0].length) {
@@ -96,14 +86,10 @@ public class Matrix {
 	/**
 	 * add method adds two vectors
 	 * 
-	 * @param
-	 * 		v1	| first vector
-	 * 		v2	| second vector
-	 * @return
-	 * 		sum of addition of v1 and v2	
-	 * @throws
-	 * 		Exception: Vector addition undefined.		| if vectors are incompatible for vector
-	 * 									| addition										
+	 * @param v1 | first vector
+	 * @param v2 | second vector
+	 * @return sum of v1 and v2	
+	 * @throws Exception Vector addition undefined. 									
 	*/
 	public static double[] add(double[] v1, double[] v2) throws Exception {
 		if (v1.length != v2.length) {
@@ -117,7 +103,11 @@ public class Matrix {
 		}
 	}
 	
-	// function for appealingly displaying matrix
+	/**
+	 * display 2d-matrix to stdout
+	 * 
+	 * @param m | the input matrix
+	 */
 	public static void print_matrix(double[][] m) {
 		for (int i = 0; i < m.length; i++) {
 			System.out.print("[ ");
@@ -128,7 +118,11 @@ public class Matrix {
 		}
 	}
 	
-	// function for appealingly displaying vector
+	/**
+	 * display vector to stdout
+	 * 
+	 * @param v | the input vector
+	 */
 	public static void print_vector(double[] v) {
 		System.out.print("[ ");
 		for (int i = 0; i < v.length; i++) {
@@ -136,21 +130,4 @@ public class Matrix {
 		}
 		System.out.println("]");
 	}
-	
-//	public static void main(String[] args) {
-//		int[][] x = {{1, 2, 3},
-//					 {3, 4, 5},
-//					 {1, 2, 3}};
-//		int[][] y = {
-//					{1, 3, 3}, 
-//					{2, 4, 2}, 
-//					{3, 5, 3}
-//		};
-//		try {
-//			int[][] p = multiply(x, y);
-//			print_matrix(p);
-//		} catch (Exception e) {
-//			System.out.println(e.getMessage());
-//		}
-//	}
 }

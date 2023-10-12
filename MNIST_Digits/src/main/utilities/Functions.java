@@ -4,7 +4,7 @@ package main.utilities;
 public class Functions {
 	
 	/**
-	 * sigmoid method applies sigmoid function 1 / (1 + e^(-x)) across vector
+	 * applies sigmoid function 1 / (1 + e^(-x)) across vector
 	 * 
 	 * @param arr | the vector
 	 * @return the vector after sigmoid application
@@ -18,24 +18,20 @@ public class Functions {
 	}
 	
 	/**
-	 * sigmoid method applies sigmoid function 1 / (1 + e^(-x))
+	 * computes sigmoid function 1 / (1 + e^(-x))
 	 * 
-	 * @param
-	 * 		double val	| the value
-	 * @return
-	 *		double 	| the value after sigmoid application
+	 * @param val | the input
+	 * @return the value after sigmoid application
 	 */
 	public static double sigmoid(double val) {
 		return 1 / (1 + Math.exp(-val));
 	}
 	
 	/**
-	 * sum method returns sum of members of vector
+	 * returns sum of members of vector
 	 * 
-	 * @param
-	 * 		double[] arr 	| the vector
-	 * @return
-	 * 		double 		| the result after summation
+	 * @param arr | the input vector
+	 * @return double | the sum of the vector's constituents
 	 */
 	public static double sum(double[] arr) {
 		double total = 0;
@@ -45,8 +41,61 @@ public class Functions {
 		return total;
 	}
 	
-	public static void main(String[] args) {
-		double[] arr = new double[] {1, 2, 3};
-		Matrix.print_vector(sigmoid(arr));
+	/**
+	 * fills vector with given num
+	 * 
+	 * @param arr | the input vector
+	 * @param num | the number to fill arr with
+	 * @return a vector of arr's dimension, filled with nums
+	 */
+	public static double[] fill(double[] arr, double num) {
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = num;
+		}
+		return arr;
+	}
+	
+	/**
+	 * compute a deep copy of a three dimensional matrix (including jagged)
+	 * 
+	 * @param arr | the input matrix
+	 * @return a copy of the matrix
+	 */
+	public static double[][][] deepCopyThreeD(double[][][] arr) {
+		// find length of max dimensions
+		int max_rows = 0;
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i].length > max_rows) {
+				max_rows = arr[i].length;
+			}
+		}
+		int max_columns = 0;
+		for (int i = 0; i < arr.length; i++) {
+			for (int j = 0; j < arr[i].length; j++) {
+				if (arr[i][j].length > max_columns) {
+					max_columns = arr[i][j].length;
+				}
+			}
+		}
+		
+		return new double[arr.length][max_rows][max_columns];
+	}
+	
+	/**
+	 * compute a deep copy of a two dimensional matrix (including jagged)
+	 * 
+	 * @param arr | the input matrix
+	 * @return a copy of the matrix
+	 */
+	public static double[][] deepCopyTwoD(double[][] arr) {
+		// find max number of rows
+		int max_rows = 0;
+		for (int i = 0; i < arr.length; i++) {
+			if (arr[i].length > max_rows) {
+				max_rows = arr[i].length;
+			}
+		}
+		
+		return new double[arr.length][max_rows];
 	}
 }
