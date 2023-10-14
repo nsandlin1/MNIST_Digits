@@ -1,6 +1,6 @@
-*
-
-!src/*
-!.gitignore
-
-src/.DS_Store
+.DS_Store
+.classpath
+.project
+.settings
+bin
+network
