@@ -1,6 +1,6 @@
 *
 
-!/src/*
-!/.gitignore
+!src/*
+!.gitignore
 
-/src/.DS_Store
+src/.DS_Store
