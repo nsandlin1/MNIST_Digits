@@ -11,10 +11,15 @@ public class Functions {
 	 * @return the vector after sigmoid application
 	 */
 	public static double[] sigmoid(double[] arr) {
+		// define new array
 		double[] newArr = new double[arr.length];
+
+		// iterate through arr, apply sigmoid to each index
 		for (int i = 0; i < arr.length; i++) {
 			newArr[i] = sigmoid(arr[i]);
 		}
+
+		// return post-sigmoid array
 		return newArr;
 	}
 	
@@ -77,23 +82,16 @@ public class Functions {
 	 * @return a copy of the matrix
 	 */
 	public static double[][][] deepCopyThreeD(double[][][] arr) {
-		// find length of max dimensions
-		int max_rows = 0;
+		double[][][] theCopy = new double[arr.length][][];
+
 		for (int i = 0; i < arr.length; i++) {
-			if (arr[i].length > max_rows) {
-				max_rows = arr[i].length;
-			}
-		}
-		int max_columns = 0;
-		for (int i = 0; i < arr.length; i++) {
+			theCopy[i] = new double[arr[i].length][];
 			for (int j = 0; j < arr[i].length; j++) {
-				if (arr[i][j].length > max_columns) {
-					max_columns = arr[i][j].length;
-				}
+				theCopy[i][j] = new double[arr[i][j].length];
 			}
 		}
 		
-		return new double[arr.length][max_rows][max_columns];
+		return theCopy;
 	}
 	
 	/**
@@ -103,15 +101,13 @@ public class Functions {
 	 * @return a copy of the matrix
 	 */
 	public static double[][] deepCopyTwoD(double[][] arr) {
-		// find max number of rows
-		int max_rows = 0;
-		for (int i = 0; i < arr.length; i++) {
-			if (arr[i].length > max_rows) {
-				max_rows = arr[i].length;
-			}
-		}
+		double[][] theCopy = new double[arr.length][];
 		
-		return new double[arr.length][max_rows];
+		for (int i = 0; i < arr.length; i++) {
+			theCopy[i] = new double[arr[i].length];
+		}
+
+		return theCopy;
 	}
 	
 	public static double[] convAndNormalize(String[] v) {
@@ -139,6 +135,12 @@ public class Functions {
 		return art;
 	}
 	
+	/**
+	 * find the index of the maximum value of an array
+	 * 
+	 * @param arr the array from which you want the max
+	 * @return the index of the maximum value of the array
+	 */
 	public static int getMax(double[] arr) {
 		int maxIndex = 0;
 		for (int i = 1; i < arr.length; i++) {
@@ -149,8 +151,13 @@ public class Functions {
 		return maxIndex;
 	}
 	
-	// ad: after decimal
-	// ads: after decimals
+	/**
+	 * format a decimal string to n chars after decimal
+	 * 
+	 * @param d the decimal string
+	 * @param ads the number of points after the decimal
+	 * @return a decimal string formatted to ads points after the decimal
+	 */
 	public static String chopDecimal(String d, int ads) {
 		int i = 0;
 		int ad = 0;

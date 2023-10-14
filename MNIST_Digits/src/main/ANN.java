@@ -9,13 +9,13 @@ import java.util.Random;
 // Class for ANN functionalities
 public class ANN {
 	
-	// Class for aggregating network components
+	// a class to consolidate network attributes' gradients for returns
 	private static class Gradients {
 		public double[][][] weight_gradients;
 		public double[][] bias_gradients;
 	}
 	
-	// Class for aggregating activation components
+	// a class for aggregating activation components (pre, post sigmoid application)
 	private static class Act {
 		public double a;
 		public double z;
