@@ -8,7 +8,7 @@
 
 package main;
 
-import main.utilities.Matrix;
+import main.classes.Network;
 
 // class for part 1 of this assignment
 public class Part1 {
@@ -19,7 +19,7 @@ public class Part1 {
 		double learningRate = 10;
 		
 		// define num of epochs
-		int epochs = 5;
+		int epochs = 6;
 		
 		// define network's weights & biases
 		Network untrainedNetwork = new Network();
@@ -64,9 +64,6 @@ public class Part1 {
 		};
 		
 		// train the network
-		Network trainedNetwork = ANN.trainNetwork(untrainedNetwork, learningRate, batches, epochs, true);
-		
-		double[] output = ANN.compute(trainedNetwork, new double[] {0, 1, 0, 1}, false);
-		Matrix.print_vector(output);
+		ANN.trainNetwork(untrainedNetwork, learningRate, batches, epochs, true);
 	}
 }

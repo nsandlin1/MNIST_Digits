@@ -104,6 +104,26 @@ public class Matrix {
 	}
 	
 	/**
+	 * add method adds two vectors
+	 * 
+	 * @param v1 | first vector
+	 * @param v2 | second vector
+	 * @return sum of v1 and v2	
+	 * @throws Exception Vector addition undefined. 									
+	*/
+	public static int[] add(int[] v1, int[] v2) throws Exception {
+		if (v1.length != v2.length) {
+			throw new Exception("Vector addition undefined.");
+		} else {
+			int[] sum = new int[v1.length];
+			for (int i = 0; i < v1.length; i++) {
+				sum[i] = v1[i] + v2[i];
+			}
+			return sum;
+		}
+	}
+	
+	/**
 	 * display 2d-matrix to stdout
 	 * 
 	 * @param m | the input matrix
@@ -130,4 +150,5 @@ public class Matrix {
 		}
 		System.out.println("]");
 	}
+	
 }

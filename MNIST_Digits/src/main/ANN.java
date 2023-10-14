@@ -1,6 +1,10 @@
 package main;
 
+import java.text.DecimalFormat;
+
+import main.classes.Network;
 import main.utilities.*;
+import java.util.Random;
 
 // Class for ANN functionalities
 public class ANN {
@@ -11,6 +15,7 @@ public class ANN {
 		public double[][] bias_gradients;
 	}
 	
+	// Class for aggregating activation components
 	private static class Act {
 		public double a;
 		public double z;
@@ -218,7 +223,11 @@ public class ANN {
 	 * @param diagnostics | whether you want verbose descriptions of the goings-on
 	 * @return the trained network
 	 */
-	public static Network trainNetwork(Network N, double learningRate, double[][][][] batches, int epochs, boolean diagnostics) {
+	public static Network trainNetwork(Network N, double learningRate, double[][][][] batches, int epochs, boolean epochStatements, boolean diagnostics) {
+		
+		// for epochStatements
+		int[] right;
+		int[] total;
 		
 		if (diagnostics) { 
 			System.out.println("/////////////////////////////////////////////////////////////////////////////////////////////////////////\n");
@@ -227,6 +236,9 @@ public class ANN {
 		
 		// iterate through epochs
 		for (int epoch = 0; epoch < epochs; epoch++) {
+			
+			right = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+			total = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 			
 			if (diagnostics) { 
 				System.out.println("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
@@ -239,7 +251,7 @@ public class ANN {
 				
 				if (diagnostics) {
 					System.out.println("\n=========================================================================================================");
-					System.out.format("Batch %d\n", batch);
+					System.out.format("Batch %d\n", batch+1);
 					System.out.println("=========================================================================================================\n");
 					System.out.println("Network weights:");
 					for (int i = 0; i < N.weights.length; i++) {
@@ -273,6 +285,14 @@ public class ANN {
 					
 					// feed input through network and store in activations
 					activations = feedForward(N.weights, N.biases, batches[batch][training_item][0], diagnostics);
+					
+					if (epochStatements) {
+						int maxIndex = Functions.getMax(activations[activations.length - 1]);
+						total[maxIndex]++;
+						if (batches[batch][training_item][1][maxIndex] == 1) {
+							right[maxIndex]++;
+						}
+					}
 					
 					if (diagnostics) {
 						System.out.println("\nBackpropogating");
@@ -360,23 +380,40 @@ public class ANN {
 						// update bias
 						N.biases[i][j] = N.biases[i][j] - ((learningRate / batches[batch].length) * sumGradient.bias_gradients[i][j]);
 					}
+				}	
+			}
+			
+			if (epochStatements) {
+				System.out.format("Stats for epoch %d\n", epoch + 1);
+				System.out.format("0 = %9s ", String.valueOf(right[0]) + "/" + String.valueOf(total[0]));
+				System.out.format("1 = %9s ", String.valueOf(right[1]) + "/" + String.valueOf(total[1]));
+				System.out.format("2 = %9s ", String.valueOf(right[2]) + "/" + String.valueOf(total[2]));
+				System.out.format("3 = %9s ", String.valueOf(right[3]) + "/" + String.valueOf(total[3]));
+				System.out.format("4 = %9s ", String.valueOf(right[4]) + "/" + String.valueOf(total[4]));
+				System.out.format("5 = %9s\n", String.valueOf(right[5]) + "/" + String.valueOf(total[5]));
+				System.out.format("6 = %9s ", String.valueOf(right[6]) + "/" + String.valueOf(total[6]));
+				System.out.format("7 = %9s ", String.valueOf(right[7]) + "/" + String.valueOf(total[7]));
+				System.out.format("8 = %9s ", String.valueOf(right[8]) + "/" + String.valueOf(total[8]));
+				System.out.format("9 = %9s ", String.valueOf(right[9]) + "/" + String.valueOf(total[9]));
+				int sumRight = Functions.sum(right);
+				int sumTotal = Functions.sum(total);
+				System.out.format("Accuracy = %11s = %6s%%", String.valueOf(sumRight) + "/" + String.valueOf(sumTotal), Functions.chopDecimal(String.valueOf((double) sumRight / sumTotal), 5));
+				System.out.println();
+			}
+			
+			if (diagnostics && (epoch == epochs - 1)) {
+				System.out.println("\n$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$\n");
+				System.out.println("Final network state:");
+				System.out.println("Network weights:");
+				for (int i = 0; i < N.weights.length; i++) {
+					System.out.format("Level %d\n", i);
+					Matrix.print_matrix(N.weights[i]);
 				}
-				
-				if (diagnostics && (batch == batches.length - 1)) {
-					System.out.println("\n---------------------------------------------------------------------------------------------------------\n");
-					System.out.println("Final network state:");
-					System.out.println("Network weights:");
-					for (int i = 0; i < N.weights.length; i++) {
-						System.out.format("Level %d\n", i);
-						Matrix.print_matrix(N.weights[i]);
-					}
-					System.out.println("\nNetwork biases:");
-					for (int i = 0; i < N.biases.length; i++) {
-						System.out.format("Level %d\n", i);
-						Matrix.print_vector(N.biases[i]);
-					}
+				System.out.println("\nNetwork biases:");
+				for (int i = 0; i < N.biases.length; i++) {
+					System.out.format("Level %d\n", i);
+					Matrix.print_vector(N.biases[i]);
 				}
-					
 			}
 		}
 		
@@ -406,6 +443,33 @@ public class ANN {
 		// return the last index of output, which is the activations of 
 		// the last layer (the layer's "output")
 		return outputs[outputs.length - 1];
+	}
+	
+	
+	public static Network createNetwork(int[] layers) {
+		Random r = new Random();
+		
+		Network N = new Network();
+		
+		N.weights = new double[layers.length-1][][];
+		N.biases = new double[layers.length-1][];
+		for (int i = 1; i < layers.length; i++) {
+			N.weights[i-1] = new double[layers[i]][];
+			N.biases[i-1] = new double[layers[i]];
+			for (int j = 0; j < layers[i]; j++) {
+				if (i-1 == 0) {
+					N.weights[i-1][j] = new double[layers[0]];
+				} else {
+					N.weights[i-1][j] = new double[layers[i-1]];
+				}
+				for (int k = 0; k < N.weights[i-1][j].length; k++) {
+					N.weights[i-1][j][k] = -1 + (2 * r.nextDouble());
+				}
+				N.biases[i-1][j] = -1 + (2 * r.nextDouble());
+			}
+		}
+		
+		return N;
 	}
 	
 }
