@@ -1,5 +1,9 @@
 package main.utilities;
 
+import main.classes.CSVData;
+import main.utilities.Functions;
+
+import java.util.Random;
 import java.io.File;
 import java.io.PrintWriter;
 import java.util.ArrayList;
@@ -10,6 +14,28 @@ import main.ANN;
 import main.classes.CSVData;
 
 public class Part2Abs {
+	
+	public static CSVData randomize(CSVData data) {
+		CSVData randomized = new CSVData();
+		randomized.pixels = Functions.deepCopyTwoDWithVars(data.pixels);
+		randomized.values = Functions.deepCopyTwoDWithVars(data.values);
+		
+		Random rand = new Random();
+		
+		for (int i = 0; i < randomized.values.length; i++) {
+			int randomIndex = rand.nextInt(data.values.length);
+			double[] tempPixels = Functions.deepCopyVector(randomized.pixels[randomIndex]);
+			double[] tempValues = Functions.deepCopyVector(randomized.values[randomIndex]);
+			
+			randomized.pixels[randomIndex] = Functions.deepCopyVector(randomized.pixels[i]);
+			randomized.values[randomIndex] = Functions.deepCopyVector(randomized.values[i]);
+			
+			randomized.pixels[i] = Functions.deepCopyVector(tempPixels);
+			randomized.values[i] = Functions.deepCopyVector(tempValues);
+		}
+		
+		return randomized;
+	}
 	
 	public static void clearScreen() {  
 	    System.out.print("\033[H\033[2J");  

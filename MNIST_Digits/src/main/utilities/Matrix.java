@@ -151,4 +151,11 @@ public class Matrix {
 		System.out.println("]");
 	}
 	
+	public static void print_vector(int[] v) {
+		System.out.print("[ ");
+		for (int i = 0; i < v.length; i++) {
+			System.out.print(v[i] + " ");
+		}
+		System.out.println("]");
+	}
 }

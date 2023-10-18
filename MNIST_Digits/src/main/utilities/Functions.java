@@ -110,6 +110,29 @@ public class Functions {
 		return theCopy;
 	}
 	
+	public static double[][] deepCopyTwoDWithVars(double[][] arr) {
+		double[][] theCopy = new double[arr.length][];
+		
+		for (int i = 0; i < arr.length; i++) {
+			theCopy[i] = new double[arr[i].length];
+			for (int j = 0; j < arr[i].length; j++) {
+				theCopy[i][j] = arr[i][j];
+			}
+		}
+
+		return theCopy;
+	}
+	
+	public static double[] deepCopyVector(double[] v) {
+		double[] copy = new double[v.length];
+		
+		for (int i = 0; i < v.length; i++) {
+			copy[i] = v[i];
+		}
+		
+		return copy; 
+	}
+	
 	public static double[] convAndNormalize(String[] v) {
 		double[] output = new double[v.length - 1];
 		
@@ -120,17 +143,14 @@ public class Functions {
 		return output;
 	}
 	
-	public static char[][] asciiArt(double[][] arr) {
+	public static char[] asciiArt(double[] v) {
 
 		String chars = "`.-':_,^=;><+!rc*/z?sLTv)J7(|Fi{C}fI31tlu[neoZ5Yxjya]2ESwqkP6h9d4VpOGbUAKXHm8RD#$Bg0MNWQ%&@";
 		
-		char[][] art = new char[arr.length][arr[0].length];
+		char[] art = new char[v.length];
 
 		for (int i = 0; i < art.length; i++) {
-			for (int j = 0; j < art[i].length; j++) {
-				System.out.print(chars.charAt((int) Math.round(arr[i][j] * 90)));
-			}
-			System.out.println();
+			System.out.print(chars.charAt((int) Math.round(v[i] * 90)));
 		}
 		return art;
 	}
