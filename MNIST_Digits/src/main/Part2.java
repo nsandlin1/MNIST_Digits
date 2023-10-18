@@ -110,7 +110,7 @@ public class Part2 {
 							System.out.println(Functions.asciiArt(Arrays.copyOfRange(testingData.pixels[i], j, j+28)));
 						}
 						System.out.format("This image is a %d.\n", Functions.getMax(testingData.values[i]));
-						System.out.format("The network classified this as a %d, this is %s.\n", Functions.getMax(activation)+1, Boolean.toString(correct));
+						System.out.format("The network classified this as a %d, this is %s.\n", Functions.getMax(activation), Boolean.toString(correct));
 						System.out.println("\t[1] Continue.\n\t[2] Exit.\n");
 						System.out.print("Enger your command: ");
 						int choice2;
