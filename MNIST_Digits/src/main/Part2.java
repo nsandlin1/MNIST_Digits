@@ -1,7 +1,10 @@
 package main;
 
 import main.classes.*;
+import main.utilities.Functions;
+import main.utilities.Matrix;
 import main.utilities.Part2Abs;
+import java.util.Arrays;
 
 import java.util.Scanner;
 
@@ -31,8 +34,7 @@ public class Part2 {
 			firstRound = false;
 			
 			System.out.println("What would you like to do?");
-			
-			int i = 1;
+
 			if (currentNetwork == null) {
 				System.out.print("\t[1] Create a randomized network.\n");
 				System.out.print("\t[2] Load a pre-trained network.\n");
@@ -86,15 +88,45 @@ public class Part2 {
 					System.out.print("Enter number of batches: ");
 					int numBatches = Integer.parseInt(in.nextLine());
 					
-					double[][][][] batches = Part2Abs.generateBatches(trainingData, numBatches);
-					
-					currentNetwork = ANN.trainNetwork(currentNetwork, learningRate, batches, epochs, true, false);
+					currentNetwork = ANN.trainNetwork(currentNetwork, learningRate, trainingData, numBatches, epochs, true, false);
 				} else if (choice == 2) {
 					Part2Abs.testNetwork(currentNetwork, trainingData);
 				} else if (choice == 3) {
 					Part2Abs.testNetwork(currentNetwork, testingData);
 				} else if (choice == 4) {
-					
+					for (int i = 0; i < testingData.pixels.length; i++) {
+						if (i != 0) {
+							System.out.println("\n***********************************************************\n");
+						}
+						System.out.format("Image %d:\n", i+1);
+						double[] activation = ANN.compute(currentNetwork, testingData.pixels[i], false);
+						boolean correct;
+						if (testingData.values[i][Functions.getMax(activation)] == 1) {
+							correct = true;
+						} else {
+							correct = false;
+						}
+						for (int j = 0; j < testingData.pixels[i].length; j += 28) {
+							System.out.println(Functions.asciiArt(Arrays.copyOfRange(testingData.pixels[i], j, j+28)));
+						}
+						System.out.format("This image is a %d.\n", Functions.getMax(testingData.values[i]));
+						System.out.format("The network classified this as a %d, this is %s.\n", Functions.getMax(activation)+1, Boolean.toString(correct));
+						System.out.println("\t[1] Continue.\n\t[2] Exit.\n");
+						System.out.print("Enger your command: ");
+						int choice2;
+						try {
+							choice2 = Integer.parseInt(in.nextLine());
+							
+						} catch (Exception e) {
+							persistentMessage = "Invalid option. Please enter a number.";
+							continue;
+						}
+						if (choice2 == 2) {
+							break;
+						}
+						
+					}
+					Functions.asciiArt(testingData.pixels[0]);
 				} else if (choice == 5) {
 					System.out.print("Enter the name of the file: ");
 					String fileName = in.nextLine();

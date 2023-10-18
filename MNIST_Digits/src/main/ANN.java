@@ -4,7 +4,10 @@ import java.text.DecimalFormat;
 
 import main.classes.Network;
 import main.utilities.*;
+
+import java.util.Arrays;
 import java.util.Random;
+import main.classes.CSVData;
 
 // Class for ANN functionalities
 public class ANN {
@@ -223,7 +226,7 @@ public class ANN {
 	 * @param diagnostics | whether you want verbose descriptions of the goings-on
 	 * @return the trained network
 	 */
-	public static Network trainNetwork(Network N, double learningRate, double[][][][] batches, int epochs, boolean epochStatements, boolean diagnostics) {
+	public static Network trainNetwork(Network N, double learningRate, CSVData trainingData, int numBatches, int epochs, boolean epochStatements, boolean diagnostics) {
 		
 		// for epochStatements
 		int[] right;
@@ -236,6 +239,12 @@ public class ANN {
 		
 		// iterate through epochs
 		for (int epoch = 0; epoch < epochs; epoch++) {
+			
+			// randomize trainingData  
+			CSVData randomizedTrainingData = Part2Abs.randomize(trainingData);
+
+			// and partition into batches
+			double[][][][] batches = Part2Abs.generateBatches(randomizedTrainingData, numBatches);
 			
 			right = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 			total = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
@@ -288,7 +297,8 @@ public class ANN {
 					
 					if (epochStatements) {
 						int maxIndex = Functions.getMax(activations[activations.length - 1]);
-						total[maxIndex]++;
+//						Matrix.print_vector(activations[activations.length - 1]);
+						total[Functions.getMax(batches[batch][training_item][1])]++;
 						if (batches[batch][training_item][1][maxIndex] == 1) {
 							right[maxIndex]++;
 						}
