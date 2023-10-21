@@ -15,6 +15,12 @@ import main.classes.CSVData;
 
 public class Part2Abs {
 	
+	/**
+	 * randomize the order of CSVdata object attributes
+	 * 
+	 * @param data | the input data
+	 * @return the data after order has been randomized
+	 */
 	public static CSVData randomize(CSVData data) {
 		CSVData randomized = new CSVData();
 		randomized.pixels = Functions.deepCopyTwoDWithVars(data.pixels);
@@ -37,11 +43,21 @@ public class Part2Abs {
 		return randomized;
 	}
 	
+	/**
+	 * clear terminal screen (untested)
+	 */
 	public static void clearScreen() {  
 	    System.out.print("\033[H\033[2J");  
 	    System.out.flush();  
 	} 
 	
+	/**
+	 * load data in file to CSVData object
+	 * 
+	 * @param fileName the name of the file the data is in
+	 * @param dataLength the amount of data
+	 * @return a CSVData object containing the data
+	 */
 	public static CSVData getData(String fileName, int dataLength) {
 		double[][] one_hot = new double[][] {
 			{1, 0, 0, 0, 0, 0, 0, 0, 0, 0},
@@ -87,6 +103,13 @@ public class Part2Abs {
 		return csvData;
 	}
 	
+	
+	/**
+	 * save Network object to a file
+	 * 
+	 * @param N the network to be saved
+	 * @param fileName the name of the file in which to save the network
+	 */
 	public static void saveToFile(Network N, String fileName) {
 		try {
 			PrintWriter writer = new PrintWriter(fileName, "UTF-8");
@@ -128,6 +151,12 @@ public class Part2Abs {
 		}
 	}
 	
+	/**
+	 * upload a network from a file
+	 * 
+	 * @param fileName the name of the file from which to load the network
+	 * @return a network object
+	 */
 	public static Network loadFromFile(String fileName) {
 
 		File file = new File("/Users/novisandlin/git/MNIST_Digits_LocRep/MNIST_Digits/" + fileName);
@@ -222,6 +251,13 @@ public class Part2Abs {
 		return N;
 	}
 
+	/**
+	 * generate list of batches from CSVData object
+	 * 
+	 * @param data data from which to derive batches
+	 * @param numBatches the approximate number of batches to create
+	 * @return a list of batches 
+	 */
 	public static double[][][][] generateBatches(CSVData data, int numBatches) {
 		if (numBatches > data.values.length) {
 			return null;
@@ -253,6 +289,12 @@ public class Part2Abs {
 		return batches;
 	}
 	
+	/**
+	 * test a Network on a dataset and print metrics
+	 * 
+	 * @param N the network to use
+	 * @param testData the data to test the network on
+	 */
 	public static void testNetwork(Network N, CSVData testData) {
 		int[] right = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 		int[] total = new int[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};

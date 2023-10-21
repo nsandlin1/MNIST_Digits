@@ -76,7 +76,7 @@ public class Functions {
 	}
 	
 	/**
-	 * compute a deep copy of a three dimensional matrix (including jagged)
+	 * compute an empty deep copy of a three dimensional matrix (including jagged)
 	 * 
 	 * @param arr | the input matrix
 	 * @return a copy of the matrix
@@ -95,10 +95,10 @@ public class Functions {
 	}
 	
 	/**
-	 * compute a deep copy of a two dimensional matrix (including jagged)
+	 * compute an empty deep copy of a two dimensional matrix (including jagged)
 	 * 
 	 * @param arr | the input matrix
-	 * @return a copy of the matrix
+	 * @return an empty copy of the matrix
 	 */
 	public static double[][] deepCopyTwoD(double[][] arr) {
 		double[][] theCopy = new double[arr.length][];
@@ -110,6 +110,12 @@ public class Functions {
 		return theCopy;
 	}
 	
+	/**
+	 * compute a deep copy of a two dimensional matrix (including jagged)
+	 * 
+	 * @param arr | the input matrix
+	 * @return a copy of the matrix
+	 */
 	public static double[][] deepCopyTwoDWithVars(double[][] arr) {
 		double[][] theCopy = new double[arr.length][];
 		
@@ -123,6 +129,12 @@ public class Functions {
 		return theCopy;
 	}
 	
+	/**
+	 * compute a deep copy of a vector
+	 * 
+	 * @param v | the input vector
+	 * @return a copy of the vector
+	 */
 	public static double[] deepCopyVector(double[] v) {
 		double[] copy = new double[v.length];
 		
@@ -133,6 +145,12 @@ public class Functions {
 		return copy; 
 	}
 	
+	/**
+	 * convert a list of strings of doubles to a normalizes list of doubles
+	 * 
+	 * @param v | the input vector
+	 * @return a vector containing the normalized doubles
+	 */
 	public static double[] convAndNormalize(String[] v) {
 		double[] output = new double[v.length - 1];
 		
@@ -143,6 +161,11 @@ public class Functions {
 		return output;
 	}
 	
+	/**
+	 * print a vector of doubles in ascii art relative to value intensities
+	 * 
+	 * @param v | the input vector
+	 */
 	public static char[] asciiArt(double[] v) {
 
 		String chars = "`.-':_,^=;><+!rc*/z?sLTv)J7(|Fi{C}fI31tlu[neoZ5Yxjya]2ESwqkP6h9d4VpOGbUAKXHm8RD#$Bg0MNWQ%&@";

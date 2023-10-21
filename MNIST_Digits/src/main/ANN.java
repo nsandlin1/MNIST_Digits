@@ -455,7 +455,11 @@ public class ANN {
 		return outputs[outputs.length - 1];
 	}
 	
-	
+	/**
+	 * create a randomized network
+	 * 
+	 * @param layers the layers to create
+	 */
 	public static Network createNetwork(int[] layers) {
 		Random r = new Random();
 		

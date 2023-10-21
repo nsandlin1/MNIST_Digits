@@ -139,7 +139,7 @@ public class Matrix {
 	}
 	
 	/**
-	 * display vector to stdout
+	 * display double vector to stdout
 	 * 
 	 * @param v | the input vector
 	 */
@@ -151,6 +151,11 @@ public class Matrix {
 		System.out.println("]");
 	}
 	
+	/**
+	 * display int vector to stdout
+	 * 
+	 * @param v | the input vector
+	 */
 	public static void print_vector(int[] v) {
 		System.out.print("[ ");
 		for (int i = 0; i < v.length; i++) {
