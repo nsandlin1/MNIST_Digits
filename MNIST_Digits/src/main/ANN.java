@@ -219,14 +219,31 @@ public class ANN {
 	/**
 	 * train an ANN
 	 * 
-	 * @param N | Network object containing weights and biases
-	 * @param learningRate | the rate at which your network will learn
-	 * @param batches | the pre-processed training data
-	 * @param epochs | the number of epochs for which to train
-	 * @param diagnostics | whether you want verbose descriptions of the goings-on
+	 * @param N Network object containing weights and biases
+	 * @param learningRate the rate at which your network will learn
+	 * @param trainingData the training data
+	 * @param numBatches the number of batches to use
+	 * @param epochs the number of epochs for which to train
+	 * @param kernelDimensions the dimensions of the kernels
+	 * @param poolDimensions the dimensions of the pooling layers
+	 * @param epochStatements whether to print epoch statistics
+	 * @param diagnostics whether you want verbose descriptions of the goings-on
 	 * @return the trained network
 	 */
-	public static Network trainNetwork(Network N, double learningRate, CSVData trainingData, int numBatches, int epochs, boolean epochStatements, boolean diagnostics) {
+	public static Network trainNetwork(Network N, double learningRate, CSVData trainingData, int numBatches, int epochs, int[] kernelDimensions, int[] poolDimensions, boolean epochStatements, boolean diagnostics) {
+		
+		// define randomized convolution layers' kernels
+		double[][][] convKernels = new double[kernelDimensions.length][][];
+		
+		if (convKernels.length > 0) {
+			for (int i = 0; i < kernelDimensions.length; i++) {
+				// generate random kernel; values between zero and 1
+				convKernels[i] = Functions.newRandomSquareMatrix(kernelDimensions[i], 0, 1);
+			}
+		}
+		
+		// define randomized convolution layers' biases
+		double[] convBiases = Functions.newRandomVector(kernelDimensions.length, 0, 1);
 		
 		// for epochStatements
 		int[] right;
@@ -292,8 +309,25 @@ public class ANN {
 						System.out.println("\nFeeding forward");
 					}
 					
+					///// NOTE!!! : this will unflatten and then flatten the image redundantly if not given info for conv. layers
+					// unflatten images
+					double[][] unflattened = Functions.unflatten(batches[batch][training_item][0], 28);
+					// perform convolution with batch normalization
+					for (int k = 0; k < convKernels.length; k++) {
+						// convolve
+						unflattened = Functions.deepCopyTwoDWithVars(Convolution.Convolve(unflattened, convKernels[k]));
+						// relu
+						unflattened = Functions.deepCopyTwoDWithVars(Convolution.pixelRelu(unflattened));
+						// pool
+						unflattened = Functions.deepCopyTwoDWithVars(Convolution.Pool(unflattened, poolDimensions[k]));
+						// normalize
+						unflattened = Functions.deepCopyTwoDWithVars(Functions.normalizeMatrix(unflattened));
+					}
+					double[] flattened = Functions.flatten(unflattened);
+					
 					// feed input through network and store in activations
-					activations = feedForward(N.weights, N.biases, batches[batch][training_item][0], diagnostics);
+//					activations = feedForward(N.weights, N.biases, batches[batch][training_item][0], diagnostics);
+					activations = feedForward(N.weights, N.biases, flattened, diagnostics);
 					
 					if (epochStatements) {
 						int maxIndex = Functions.getMax(activations[activations.length - 1]);

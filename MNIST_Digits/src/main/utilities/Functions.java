@@ -1,6 +1,7 @@
 package main.utilities;
 
 import java.lang.Math;
+import java.util.Random;
 
 public class Functions {
 	
@@ -146,7 +147,8 @@ public class Functions {
 	}
 	
 	/**
-	 * convert a list of strings of doubles to a normalizes list of doubles
+	 * convert a list of strings of doubles to a normalized list of doubles
+	 * first number in v is the classification
 	 * 
 	 * @param v | the input vector
 	 * @return a vector containing the normalized doubles
@@ -156,6 +158,58 @@ public class Functions {
 		
 		for (int i = 0; i < output.length; i++) {
 			output[i] = Double.parseDouble(v[i+1]) / 255;
+		}
+		
+		return output;
+	}
+	
+	/**
+	 * convert a list of doubles to a list of normalized doubles
+	 * 
+	 * @param v | the input vector
+	 * @return a vector containing the normalized doubles
+	 */
+	public static double[] normalize(double[] v) {
+		double min_value = v[0];
+		double max_value = v[0];
+		
+		for (int i = 0; i < v.length; i++) {
+			if (v[i] < min_value) {
+				min_value = v[i];
+			} else if (v[i] > max_value) {
+				max_value = v[i];
+			}
+		}
+		
+		double[] output = new double[v.length];
+		
+		for (int i = 0; i < output.length; i++) {
+			output[i] = ((v[i] - min_value) / (max_value - min_value));
+		}
+		
+		return output;
+	}
+	
+	public static double[][] normalizeMatrix(double[][] m) {
+		double min_value = m[0][0];
+		double max_value = m[0][0];
+		
+		for (int i = 0; i < m.length; i++) {
+			for (int j = 0; j < m[i].length; j++) {
+				if (m[i][j] < min_value) {
+					min_value = m[i][j];
+				} else if (m[i][j] > max_value) {
+					max_value = m[i][j];
+				}
+			}
+		}
+		
+		double[][] output = new double[m.length][m[0].length];
+		
+		for (int i = 0; i < m.length; i++) {
+			for (int j = 0; j < m[i].length; j++) {
+				output[i][j] = ((m[i][j] - min_value) / (max_value - min_value));
+			}
 		}
 		
 		return output;
@@ -220,8 +274,58 @@ public class Functions {
 		return d.substring(0, i);
 	}
 	
-	public static void main(String[] args) {
-		System.out.println(chopDecimal("9.43243", 6));
+	public static double[][] unflatten(double[] v, int n) {
+		double[][] unflattened = new double[n][n];
+		for (int i = 0, k = 0; i < v.length; i++) {
+			unflattened[k][i % n] = v[i];
+			if ((i + 1) % n == 0) {
+				k += 1;
+			}
+		}
+		return unflattened;
 	}
 	
+	public static double[] flatten(double[][] m) {
+		double[] flattened = new double[m.length * m.length];
+		int vi = 0;
+		for (int i = 0; i < m.length; i++) {
+			for (int j = 0; j < m[0].length; j++) {
+				flattened[vi] = m[i][j];
+				vi++;
+			}
+		}
+		return flattened;
+	}
+	
+	// generate random square matrix with values between (including) min and (not including) max
+	public static double[][] newRandomSquareMatrix(int size, int min, int max) {
+		double[][] randomMatrix = new double[size][size];
+		
+		Random rand = new Random();
+		
+		for (int i = 0; i < size; i++) {
+			for (int j = 0; j < size; j++) {
+				randomMatrix[i][j] = (rand.nextDouble() * (max - min)) + min;
+			}
+		}
+		
+		return randomMatrix;
+	}
+	
+	public static double[] newRandomVector(int size, int min, int max) {
+		double[] randomVector = new double[size];
+		
+		Random rand = new Random();
+		
+		for (int i = 0; i < size; i++) {
+			randomVector[i] = (rand.nextDouble() * (max - min)) + min;
+		}
+		
+		return randomVector;
+	}
+	
+	public static void main(String[] args) {
+		double[] matrix = {1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5, 1, 2, 3, 4, 5};
+		Matrix.print_matrix(unflatten(matrix, 5));
+	}
 }
