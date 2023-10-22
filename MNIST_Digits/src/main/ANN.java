@@ -216,17 +216,66 @@ public class ANN {
 		return G;
 	}
 	
+	public static double[][] forwardConvolution(double[] image, double[][][] kernels, double[][][] biases) {
+		// unflatten image
+		// TODO: make image size dynamic
+		double[][] unflattened = Functions.unflatten(image, 28);
+		
+		// create array for the output cross-correlations (convolutions)
+		double[][] convolutionOutputs = new double[kernels.length][];
+		
+		// for each kernel
+		for (int i = 0; i < kernels.length; i++) {
+			
+			// convolve the image
+			double[][] convolvedImage = Convolution.Convolve(unflattened, kernels[i]);
+			
+			// add biases to convolved image and create bias matrix if it does not exist
+			if (biases[i] == null) {
+				biases[i] = Functions.newRandomSquareMatrix(convolvedImage.length, 0, 1);
+			}
+			try {
+				convolutionOutputs[i] = Functions.flatten(Matrix.add(convolvedImage, biases[i]));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return convolutionOutputs;
+	}
+	
+	public static void backpropConvolution() {
+		
+	}
+	
 	/**
 	 * train an ANN
 	 * 
-	 * @param N | Network object containing weights and biases
-	 * @param learningRate | the rate at which your network will learn
-	 * @param batches | the pre-processed training data
-	 * @param epochs | the number of epochs for which to train
-	 * @param diagnostics | whether you want verbose descriptions of the goings-on
+	 * @param N Network object containing weights and biases
+	 * @param learningRate the rate at which your network will learn
+	 * @param trainingData the training data
+	 * @param numBatches the number of batches to use
+	 * @param epochs the number of epochs for which to train
+	 * @param kernelDimensions the dimensions of the kernels
+	 * @param poolDimensions the dimensions of the pooling layers
+	 * @param epochStatements whether to print epoch statistics
+	 * @param diagnostics whether you want verbose descriptions of the goings-on
 	 * @return the trained network
 	 */
-	public static Network trainNetwork(Network N, double learningRate, CSVData trainingData, int numBatches, int epochs, boolean epochStatements, boolean diagnostics) {
+	public static Network trainNetwork(Network N, double learningRate, CSVData trainingData, int numBatches, int epochs, int[] kernelDimensions, int[] poolDimensions, boolean epochStatements, boolean diagnostics) {
+		
+		// define randomized convolution layers' kernels
+		double[][][] convKernels = new double[kernelDimensions.length][][];
+		
+		if (convKernels.length > 0) {
+			for (int i = 0; i < kernelDimensions.length; i++) {
+				// generate random kernel; values between zero and 1
+				convKernels[i] = Functions.newRandomSquareMatrix(kernelDimensions[i], 0, 1);
+			}
+		}
+		
+		// define randomized convolution layers' biases
+		double[][][] convBiases = new double[convKernels.length][][];
 		
 		// for epochStatements
 		int[] right;
@@ -291,6 +340,7 @@ public class ANN {
 						Matrix.print_vector(batches[batch][training_item][0]);
 						System.out.println("\nFeeding forward");
 					}
+					
 					
 					// feed input through network and store in activations
 					activations = feedForward(N.weights, N.biases, batches[batch][training_item][0], diagnostics);

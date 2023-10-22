@@ -1,5 +1,6 @@
 package main;
 
+import main.utilities.Functions;
 import main.utilities.Matrix;
 
 public class Convolution {
@@ -84,21 +85,33 @@ public class Convolution {
 		return pooled_image;
 	}
 	
-	public static void main(String[] args) {
-		double[][] kernel = new double[][] {
-			{1, 0, 1, 3, 2},
-			{2, 0, 2, 2, 3},
-			{1, 0, 1, 1, 0}
-		};
-		double[][] image = new double[][] {
-			{1, 2, 3, 4, 5},
-			{6, 7, 8, 9, 10},
-			{11, 12, 32, 14, 15},
-			{16, 17, 18, 19, 20},
-			{21, 22, 23, 24, 25}
-		};
-		
-		Matrix.print_matrix(Convolve(image, kernel));
-		Matrix.print_matrix(Pool(image, -342));
+	public static double relu(double d) {
+		if (d > 0) {
+			return d;
+		} else {
+			return 0;
+		}
 	}
+	
+	public static double[][] pixelRelu(double[][] pixels) {
+		double[][] relued = new double[pixels.length][pixels[0].length];
+		
+		for (int i = 0; i < pixels.length; i++) {
+			for (int j = 0; j < pixels[0].length; j++) {
+				relued[i][j] = relu(pixels[i][j]);
+			}
+		}
+		
+		return relued;
+	}
+	
+	public static void main(String[] args) {
+		double[][] x = {
+				{1.5, -2.3, 1},
+				{4.3, 23.2, -2},
+				{-4, 6.4, -1}
+		};
+		Matrix.print_matrix(pixelRelu(x));
+	}
+	
 }

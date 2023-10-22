@@ -88,7 +88,7 @@ public class Part2 {
 					System.out.print("Enter number of batches: ");
 					int numBatches = Integer.parseInt(in.nextLine());
 					
-					currentNetwork = ANN.trainNetwork(currentNetwork, learningRate, trainingData, numBatches, epochs, true, false);
+					currentNetwork = ANN.trainNetwork(currentNetwork, learningRate, trainingData, numBatches, epochs, new int[] {4}, new int[] {1}, true, false);
 				} else if (choice == 2) {
 					Part2Abs.testNetwork(currentNetwork, trainingData);
 				} else if (choice == 3) {
@@ -109,6 +109,7 @@ public class Part2 {
 						for (int j = 0; j < testingData.pixels[i].length; j += 28) {
 							System.out.println(Functions.asciiArt(Arrays.copyOfRange(testingData.pixels[i], j, j+28)));
 						}
+						
 						System.out.format("This image is a %d.\n", Functions.getMax(testingData.values[i]));
 						System.out.format("The network classified this as a %d, this is %s.\n", Functions.getMax(activation), Boolean.toString(correct));
 						System.out.println("\t[1] Continue.\n\t[2] Exit.\n");
