@@ -216,6 +216,38 @@ public class ANN {
 		return G;
 	}
 	
+	public static double[][] forwardConvolution(double[] image, double[][][] kernels, double[][][] biases) {
+		// unflatten image
+		// TODO: make image size dynamic
+		double[][] unflattened = Functions.unflatten(image, 28);
+		
+		// create array for the output cross-correlations (convolutions)
+		double[][] convolutionOutputs = new double[kernels.length][];
+		
+		// for each kernel
+		for (int i = 0; i < kernels.length; i++) {
+			
+			// convolve the image
+			double[][] convolvedImage = Convolution.Convolve(unflattened, kernels[i]);
+			
+			// add biases to convolved image and create bias matrix if it does not exist
+			if (biases[i] == null) {
+				biases[i] = Functions.newRandomSquareMatrix(convolvedImage.length, 0, 1);
+			}
+			try {
+				convolutionOutputs[i] = Functions.flatten(Matrix.add(convolvedImage, biases[i]));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return convolutionOutputs;
+	}
+	
+	public static void backpropConvolution() {
+		
+	}
+	
 	/**
 	 * train an ANN
 	 * 
@@ -243,7 +275,7 @@ public class ANN {
 		}
 		
 		// define randomized convolution layers' biases
-		double[] convBiases = Functions.newRandomVector(kernelDimensions.length, 0, 1);
+		double[][][] convBiases = new double[convKernels.length][][];
 		
 		// for epochStatements
 		int[] right;
@@ -309,25 +341,9 @@ public class ANN {
 						System.out.println("\nFeeding forward");
 					}
 					
-					///// NOTE!!! : this will unflatten and then flatten the image redundantly if not given info for conv. layers
-					// unflatten images
-					double[][] unflattened = Functions.unflatten(batches[batch][training_item][0], 28);
-					// perform convolution with batch normalization
-					for (int k = 0; k < convKernels.length; k++) {
-						// convolve
-						unflattened = Functions.deepCopyTwoDWithVars(Convolution.Convolve(unflattened, convKernels[k]));
-						// relu
-						unflattened = Functions.deepCopyTwoDWithVars(Convolution.pixelRelu(unflattened));
-						// pool
-						unflattened = Functions.deepCopyTwoDWithVars(Convolution.Pool(unflattened, poolDimensions[k]));
-						// normalize
-						unflattened = Functions.deepCopyTwoDWithVars(Functions.normalizeMatrix(unflattened));
-					}
-					double[] flattened = Functions.flatten(unflattened);
 					
 					// feed input through network and store in activations
-//					activations = feedForward(N.weights, N.biases, batches[batch][training_item][0], diagnostics);
-					activations = feedForward(N.weights, N.biases, flattened, diagnostics);
+					activations = feedForward(N.weights, N.biases, batches[batch][training_item][0], diagnostics);
 					
 					if (epochStatements) {
 						int maxIndex = Functions.getMax(activations[activations.length - 1]);
