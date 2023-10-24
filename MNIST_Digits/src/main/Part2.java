@@ -1,3 +1,10 @@
+// CWID: 10389876
+// Date: 10/24/2023
+// Ass. Num: 2 Part 2
+// Desc.: This program dynamically creates and trains ANNs to 
+//        solve the MNIST digit classification problem. It also hosts
+//        a bodacious user interface.
+
 package main;
 
 import main.classes.*;
@@ -12,10 +19,10 @@ public class Part2 {
 	
 	public static void main(String[] args) {
 		
+		Scanner in = new Scanner(System.in);
+		
 		CSVData trainingData = Part2Abs.getData("/Users/novisandlin/git/MNIST_Digits_LocRep/mnist_train.csv", 60000);
 		CSVData testingData = Part2Abs.getData("/Users/novisandlin/git/MNIST_Digits_LocRep/mnist_test.csv", 10000);
-		
-		Scanner in = new Scanner(System.in);
 		
 		Network currentNetwork = null;
 		
@@ -35,6 +42,7 @@ public class Part2 {
 			
 			System.out.println("What would you like to do?");
 
+            // print options
 			if (currentNetwork == null) {
 				System.out.print("\t[1] Create a randomized network.\n");
 				System.out.print("\t[2] Load a pre-trained network.\n");
@@ -46,8 +54,9 @@ public class Part2 {
 				System.out.print("\t[3] Display current network accuracy on TESTING data.\n");
 				System.out.print("\t[4] Run current network on TESTING data showing images and labels.\n");
 				System.out.print("\t[5] Save the current network state to a file.\n");
-				System.out.print("\t[6] Discard current network.\n");
-				System.out.print("\t[7] Exit program.\n");
+                System.out.print("\t[6] Display the misclassified TESTING images.\n");
+				System.out.print("\t[7] Discard current network.\n");
+				System.out.print("\t[8] Exit program.\n");
 			}
 			
 			System.out.print("\nEnter your command: ");
@@ -127,22 +136,58 @@ public class Part2 {
 						}
 						
 					}
-					Functions.asciiArt(testingData.pixels[0]);
 				} else if (choice == 5) {
 					System.out.print("Enter the name of the file: ");
 					String fileName = in.nextLine();
 					Part2Abs.saveToFile(currentNetwork, fileName);
 				} else if (choice == 6) {
-					currentNetwork = null;
+                    for (int i = 0; i < testingData.pixels.length; i++) {
+						double[] activation = ANN.compute(currentNetwork, testingData.pixels[i], false);
+						boolean correct;
+						if (testingData.values[i][Functions.getMax(activation)] == 1) {
+							correct = true;
+						} else {
+							correct = false;
+						}
+                        if (!correct) {
+                        	if (i != 0) {
+    							System.out.println("\n***********************************************************\n");
+    						}
+    						System.out.format("Image %d:\n", i+1);
+                            for (int j = 0; j < testingData.pixels[i].length; j += 28) {
+                                System.out.println(Functions.asciiArt(Arrays.copyOfRange(testingData.pixels[i], j, j+28)));
+                            }
+                            
+                            System.out.format("This image is a %d.\n", Functions.getMax(testingData.values[i]));
+                            System.out.format("The network classified this as a %d, this is %s.\n", Functions.getMax(activation), Boolean.toString(correct));
+                            System.out.println("\t[1] Continue.\n\t[2] Exit.\n");
+                            System.out.print("Enger your command: ");
+                            int choice2;
+                            try {
+                                choice2 = Integer.parseInt(in.nextLine());
+                                
+                            } catch (Exception e) {
+                                persistentMessage = "Invalid option. Please enter a number.";
+                                continue;
+                            }
+                            if (choice2 == 2) {
+                                break;
+                            }
+                        }
+                    }
 				} else if (choice == 7) {
+					currentNetwork = null;
+				} else if (choice == 8) {
 					System.out.println("Thanks, thanks for playin' my game.");
 					break;
 				}
 			}
 			
 			// I don't know if this works
-			Part2Abs.clearScreen();
+//			Part2Abs.clearScreen();
 		}
+		
+		in.close();
 	}
 	
 }
