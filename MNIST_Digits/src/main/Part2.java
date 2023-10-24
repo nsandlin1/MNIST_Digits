@@ -1,3 +1,10 @@
+// CWID: 10389876
+// Date: 10/24/2023
+// Ass. Num: 2 Part 2
+// Desc.: This program dynamically creates and trains ANNs to 
+//        solve the MNIST digit classification problem. It also hosts
+//        a bodacious user interface.
+
 package main;
 
 import main.classes.*;

@@ -187,7 +187,7 @@ public class Part2Abs {
 			
 			inputStream.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			System.out.println("Filename Invalid");
 			return null;
 		}
 			
