@@ -188,6 +188,7 @@ public class Part2Abs {
 			inputStream.close();
 		} catch (Exception e) {
 			e.printStackTrace();
+			return null;
 		}
 			
 		Network N = new Network();
@@ -301,12 +302,24 @@ public class Part2Abs {
 		
 		double[] output;
 		for (int i = 0; i < testData.pixels.length; i++) {
+			System.out.print("right before: ");
+			Matrix.print_vector(right);
+			System.out.print("total before: ");
+			Matrix.print_vector(total);
+			System.out.print("answer: ");
+			Matrix.print_vector(testData.values[i]);
 			output = ANN.compute(N, testData.pixels[i], false);
+			System.out.print("output: ");
+			Matrix.print_vector(output);
 			int maxIndex = Functions.getMax(output);
-			total[maxIndex]++;
+			total[Functions.getMax(testData.values[i])]++;
 			if (testData.values[i][maxIndex] == 1) {
 				right[maxIndex]++;
 			}
+			System.out.print("right after: ");
+			Matrix.print_vector(right);
+			System.out.print("total after: ");
+			Matrix.print_vector(total);
 		}
 		
 		System.out.format("0 = %9s ", String.valueOf(right[0]) + "/" + String.valueOf(total[0]));
